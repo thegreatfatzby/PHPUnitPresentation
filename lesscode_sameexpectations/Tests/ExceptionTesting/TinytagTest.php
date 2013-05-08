@@ -29,7 +29,7 @@ class TinytagTest extends PHPUnit_Framework_TestCase {
 	
 	public function testUpdateThrowsInvalidArgumentExceptionIfUrlIsBlank() {
 		try {
-			$this->tinyTagModel->create(array('url' => ''));
+			$this->tinyTagModel->update(12, array('url' => ''));
 		} catch (InvalidArgumentException $e) {
 			return;
 		}
@@ -38,7 +38,7 @@ class TinytagTest extends PHPUnit_Framework_TestCase {
 	
 	public function testUpdateThrowsInvalidArgumentExceptionIfUrlIsInvalidString() {
 		try {
-			$this->tinyTagModel->create(array('url' => 'not a url'));
+			$this->tinyTagModel->update(12, array('url' => 'not a url'));
 		} catch (InvalidArgumentException $e) {
 			return;
 		}
@@ -47,7 +47,7 @@ class TinytagTest extends PHPUnit_Framework_TestCase {
 	
 	public function testUpdateThrowsInvalidArgumentExceptionIfUrlIsMissingProtocol() {
 		try {
-			$this->tinyTagModel->create(array('url' => 'www.appnexus.com'));
+			$this->tinyTagModel->update(12, array('url' => 'www.appnexus.com'));
 		} catch (InvalidArgumentException $e) {
 			return;
 		}
@@ -56,7 +56,7 @@ class TinytagTest extends PHPUnit_Framework_TestCase {
 	
 	public function testUpdateThrowsInvalidArgumentExceptionIfIdIsNonNumeric() {
 		try {
-			$this->tinyTagModel->create(array('url' => ''));
+			$this->tinyTagModel->update('nan', array('url' => 'http://www.appnexus.com'));
 		} catch (InvalidArgumentException $e) {
 			return;
 		}
@@ -65,7 +65,7 @@ class TinytagTest extends PHPUnit_Framework_TestCase {
 	
 	public function testDeleteThrowsInvalidArgumentExceptionIfIdIsNonNumeric() {
 		try {
-			$this->tinyTagModel->create(array('url' => ''));
+			$this->tinyTagModel->delete('nan');
 		} catch (InvalidArgumentException $e) {
 			return;
 		}
@@ -74,7 +74,7 @@ class TinytagTest extends PHPUnit_Framework_TestCase {
 	
 	public function testReadThrowsInvalidArgumentExceptionIfIdIsNonNumeric() {
 		try {
-			$this->tinyTagModel->create(array('url' => ''));
+			$this->tinyTagModel->read('nan');
 		} catch (InvalidArgumentException $e) {
 			return;
 		}
@@ -95,9 +95,9 @@ class TinytagTest extends PHPUnit_Framework_TestCase {
 	
 	public function testUpdateSucceedsWithValidParameters() {
 		$expectedUrl = 'http://www.appnexus.com';
-		
 		$newId = $this->tinyTagModel->create(array('url' => 'http://www.google.com'));
 		$this->assertInternalType('numeric', $newId);
+		
 		$this->tinyTagModel->update($newId, array('url' => $expectedUrl));
 		
 		$tinytag = $this->tinyTagModel->read($newId);
@@ -109,6 +109,7 @@ class TinytagTest extends PHPUnit_Framework_TestCase {
 	public function testDeleteSucceeds() {
 		$newId = $this->tinyTagModel->create(array('url' => 'http://www.google.com'));
 		$this->assertInternalType('numeric', $newId);
+		
 		$this->assertTrue($this->tinyTagModel->delete($newId));
 		
 		$this->assertFalse($this->tinyTagModel->read($newId));
