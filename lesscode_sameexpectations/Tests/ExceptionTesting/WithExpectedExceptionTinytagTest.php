@@ -6,15 +6,13 @@ class WithExpectedExceptionTinytagTest extends PHPUnit_Framework_TestCase {
 	
 	protected $tinyTagModel;
 	
-	public static function setUpBeforeClass()
-	{
+	public static function setUpBeforeClass() {
 		global $config;
 		$db = new MysqlSimplePDO($config['hostname'], $config['username'], $config['password'], $config['database']);
 		self::$db = $db;
 	}
 	
-	public function setUp()
-	{
+	public function setUp() {
 		$this->tinyTagModel = new Model_Tinytag(self::$db);
 	}
 	
