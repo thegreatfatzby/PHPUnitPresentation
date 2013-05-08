@@ -21,7 +21,7 @@ class TinytagTest extends PHPUnit_Framework_TestCase {
 		$tinyTagModel = new Model_Tinytag($db);
 		
 		try {
-			$tinyTagModel->create(array('url' => ''));
+			$tinyTagModel->update(12, array('url' => ''));
 		} catch (InvalidArgumentException $e) {
 			return;
 		}
@@ -34,7 +34,7 @@ class TinytagTest extends PHPUnit_Framework_TestCase {
 		$tinyTagModel = new Model_Tinytag($db);
 		
 		try {
-			$tinyTagModel->create(array('url' => 'not a url'));
+			$tinyTagModel->update(12, array('url' => 'not a url'));
 		} catch (InvalidArgumentException $e) {
 			return;
 		}
@@ -47,7 +47,7 @@ class TinytagTest extends PHPUnit_Framework_TestCase {
 		$tinyTagModel = new Model_Tinytag($db);
 		
 		try {
-			$tinyTagModel->create(array('url' => 'www.appnexus.com'));
+			$tinyTagModel->update(12, array('url' => 'www.appnexus.com'));
 		} catch (InvalidArgumentException $e) {
 			return;
 		}
@@ -60,7 +60,7 @@ class TinytagTest extends PHPUnit_Framework_TestCase {
 		$tinyTagModel = new Model_Tinytag($db);
 		
 		try {
-			$tinyTagModel->create(array('url' => ''));
+			$tinyTagModel->update('nan', array('url' => 'http://www.appnexus.com'));
 		} catch (InvalidArgumentException $e) {
 			return;
 		}
@@ -73,7 +73,7 @@ class TinytagTest extends PHPUnit_Framework_TestCase {
 		$tinyTagModel = new Model_Tinytag($db);
 		
 		try {
-			$tinyTagModel->create(array('url' => ''));
+			$tinyTagModel->delete('nan');
 		} catch (InvalidArgumentException $e) {
 			return;
 		}
@@ -86,7 +86,7 @@ class TinytagTest extends PHPUnit_Framework_TestCase {
 		$tinyTagModel = new Model_Tinytag($db);
 		
 		try {
-			$tinyTagModel->create(array('url' => ''));
+			$tinyTagModel->read('nan');
 		} catch (InvalidArgumentException $e) {
 			return;
 		}
@@ -113,9 +113,9 @@ class TinytagTest extends PHPUnit_Framework_TestCase {
 		$db = new MysqlSimplePDO($config['hostname'], $config['username'], $config['password'], $config['database']);
 		$tinyTagModel = new Model_Tinytag($db);
 		$expectedUrl = 'http://www.appnexus.com';
-		
 		$newId = $tinyTagModel->create(array('url' => 'http://www.google.com'));
 		$this->assertInternalType('numeric', $newId);
+		
 		$tinyTagModel->update($newId, array('url' => $expectedUrl));
 		
 		$tinytag = $tinyTagModel->read($newId);
@@ -128,9 +128,9 @@ class TinytagTest extends PHPUnit_Framework_TestCase {
 		global $config;
 		$db = new MysqlSimplePDO($config['hostname'], $config['username'], $config['password'], $config['database']);
 		$tinyTagModel = new Model_Tinytag($db);
-		
 		$newId = $tinyTagModel->create(array('url' => 'http://www.google.com'));
 		$this->assertInternalType('numeric', $newId);
+		
 		$this->assertTrue($tinyTagModel->delete($newId));
 		
 		$this->assertFalse($tinyTagModel->read($newId));
