@@ -1,56 +1,84 @@
 <?php 
 
-class TinytagTest extends PHPUnit_Framework_TestCase {
+class NoExpectedExceptionTinytagTest extends PHPUnit_Framework_TestCase {
 	
 	protected static $db;
 	
 	protected $tinyTagModel;
 	
-	public static function setUpBeforeClass() {
+	public static function setUpBeforeClass()
+	{
 		global $config;
 		$db = new MysqlSimplePDO($config['hostname'], $config['username'], $config['password'], $config['database']);
 		self::$db = $db;
 	}
 	
-	public function setUp() {
+	public function setUp()
+	{
 		$this->tinyTagModel = new Model_Tinytag(self::$db);
 	}
 	
-	public function BadUrl_DataProvider() {
-		return array(
-			array(''), array('not a url'), array('www.appnexus.com')	
-		);
+	public function testCreateThrowsInvalidArgumentExceptionIfUrlIsBad() {
+		try {
+			$this->tinyTagModel->create(array('url' => ''));
+		} catch (InvalidArgumentException $e) {
+			return;
+		}
+		$this->fail("Excpected exception not thrown");
 	}
 	
-	/**
-	 * @expectedException InvalidArgumentException
-	 * @dataProvider BadUrl_DataProvider
-	 */
-	public function testCreateThrowsInvalidArgumentExceptionIfUrlIsBad($badUrl) {
-		$this->tinyTagModel->create(array('url' => $badUrl));
+	public function testUpdateThrowsInvalidArgumentExceptionIfUrlIsBlank() {
+		try {
+			$this->tinyTagModel->update(12, array('url' => ''));
+		} catch (InvalidArgumentException $e) {
+			return;
+		}
+		$this->fail("Excpected exception not thrown");
 	}
 	
-	/**
-	 * @expectedException InvalidArgumentException
-	 * @dataProvider BadUrl_DataProvider
-	 */
-	public function testUpdateThrowsInvalidArgumentExceptionIfUrlIsBad($badUrl) {
-		$this->tinyTagModel->update(12, array('url' => $badUrl));
+	public function testUpdateThrowsInvalidArgumentExceptionIfUrlIsInvalidString() {
+		try {
+			$this->tinyTagModel->update(12, array('url' => 'not a url'));
+		} catch (InvalidArgumentException $e) {
+			return;
+		}
+		$this->fail("Excpected exception not thrown");
 	}
 	
-	public function MethodsThatTakeId_DataProvider() {
-		return array(
-			array('read'), array('update'), array('delete')
-		);
+	public function testUpdateThrowsInvalidArgumentExceptionIfUrlIsMissingProtocol() {
+		try {
+			$this->tinyTagModel->update(12, array('url' => 'www.appnexus.com'));
+		} catch (InvalidArgumentException $e) {
+			return;
+		}
+		$this->fail("Excpected exception not thrown");
 	}
 	
-	/**
-	 * @expectedException InvalidArgumentException
-	 * @dataProvider MethodsThatTakeId_DataProvider
-	 */
-	public function testMethodThatTakesIdThrowsInvalidArgumentExceptionIfIdIsNonNumeric($method)
-	{
-		$this->tinyTagModel->$method('nan', array('url' => 'http://www.appnexus.com'));
+	public function testUpdateThrowsInvalidArgumentExceptionIfIdIsNonNumeric() {
+		try {
+			$this->tinyTagModel->update('nan', array('url' => 'http://www.appnexus.com'));
+		} catch (InvalidArgumentException $e) {
+			return;
+		}
+		$this->fail("Excpected exception not thrown");
+	}
+	
+	public function testDeleteThrowsInvalidArgumentExceptionIfIdIsNonNumeric() {
+		try {
+			$this->tinyTagModel->delete('nan');
+		} catch (InvalidArgumentException $e) {
+			return;
+		}
+		$this->fail("Excpected exception not thrown");
+	}
+	
+	public function testReadThrowsInvalidArgumentExceptionIfIdIsNonNumeric() {
+		try {
+			$this->tinyTagModel->read('nan');
+		} catch (InvalidArgumentException $e) {
+			return;
+		}
+		$this->fail("Excpected exception not thrown");
 	}
 	
 	public function testInsertSucceedsWithValidParameters() {

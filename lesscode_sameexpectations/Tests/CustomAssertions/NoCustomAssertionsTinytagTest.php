@@ -1,6 +1,6 @@
 <?php 
 
-class TinytagTest extends PHPUnit_Framework_TestCase {
+class NoCustomAssertionsTinytagTest extends PHPUnit_Framework_TestCase {
 	
 	protected static $db;
 	
@@ -16,53 +16,41 @@ class TinytagTest extends PHPUnit_Framework_TestCase {
 		$this->tinyTagModel = new Model_Tinytag(self::$db);
 	}
 	
-	/**
-	 * @expectedException InvalidArgumentException
-	 */
-	public function testCreateThrowsInvalidArgumentExceptionIfUrlIsBad() {
-		$this->tinyTagModel->create(array('url' => ''));
+	public function BadUrl_DataProvider() {
+		return array(
+			array(''), array('not a url'), array('www.appnexus.com')	
+		);
 	}
 	
 	/**
 	 * @expectedException InvalidArgumentException
+	 * @dataProvider BadUrl_DataProvider
 	 */
-	public function testUpdateThrowsInvalidArgumentExceptionIfUrlIsBlank() {
-		$this->tinyTagModel->update(12, array('url' => ''));
+	public function testCreateThrowsInvalidArgumentExceptionIfUrlIsBad($badUrl) {
+		$this->tinyTagModel->create(array('url' => $badUrl));
 	}
 	
 	/**
 	 * @expectedException InvalidArgumentException
+	 * @dataProvider BadUrl_DataProvider
 	 */
-	public function testUpdateThrowsInvalidArgumentExceptionIfUrlIsInvalidString() {
-		$this->tinyTagModel->update(12, array('url' => 'not a url'));
+	public function testUpdateThrowsInvalidArgumentExceptionIfUrlIsBad($badUrl) {
+		$this->tinyTagModel->update(12, array('url' => $badUrl));
+	}
+	
+	public function MethodsThatTakeId_DataProvider() {
+		return array(
+			array('read'), array('update'), array('delete')
+		);
 	}
 	
 	/**
 	 * @expectedException InvalidArgumentException
+	 * @dataProvider MethodsThatTakeId_DataProvider
 	 */
-	public function testUpdateThrowsInvalidArgumentExceptionIfUrlIsMissingProtocol() {
-		$this->tinyTagModel->update(12, array('url' => 'www.appnexus.com'));
-	}
-	
-	/**
-	 * @expectedException InvalidArgumentException
-	 */
-	public function testUpdateThrowsInvalidArgumentExceptionIfIdIsNonNumeric() {
-		$this->tinyTagModel->update('nan', array('url' => 'http://www.appnexus.com'));
-	}
-	
-	/**
-	 * @expectedException InvalidArgumentException
-	 */
-	public function testDeleteThrowsInvalidArgumentExceptionIfIdIsNonNumeric() {
-		$this->tinyTagModel->delete('nan');
-	}
-	
-	/**
-	 * @expectedException InvalidArgumentException
-	 */
-	public function testReadThrowsInvalidArgumentExceptionIfIdIsNonNumeric() {
-		$this->tinyTagModel->read('nan');
+	public function testMethodThatTakesIdThrowsInvalidArgumentExceptionIfIdIsNonNumeric($method)
+	{
+		$this->tinyTagModel->$method('nan', array('url' => 'http://www.appnexus.com'));
 	}
 	
 	public function testInsertSucceedsWithValidParameters() {
