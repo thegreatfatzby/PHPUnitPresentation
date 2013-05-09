@@ -1,4 +1,5 @@
 Set up an alias for easy PHPUnit running
 alias anunit='phpunit -c /home/ifoster/PHPUnitPresentation/lesscode_sameexpectations/phpunitconfig.xml'
+alias anunit='phpunit -c /home/ifoster/PHPUnitPresentation/fake_objects/phpunitconfig.xml'
 
 mysql -h localhost -u admin -padminpass < phpunitdemo_alter_001.sql
