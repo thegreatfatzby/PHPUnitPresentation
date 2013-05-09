@@ -33,7 +33,7 @@ interface Event_DispatcherInterface
      *
      * @api
      */
-    public function dispatch($eventName, Event $event = null);
+    public function dispatch($eventName, Event_Event $event = null);
 
     /**
      * Adds an event listener that listens on the specified events.
@@ -57,7 +57,7 @@ interface Event_DispatcherInterface
      *
      * @api
      */
-    public function addSubscriber(EventSubscriberInterface $subscriber);
+    public function addSubscriber(Event_SubscriberInterface $subscriber);
 
     /**
      * Removes an event listener from the specified events.
@@ -72,7 +72,7 @@ interface Event_DispatcherInterface
      *
      * @param EventSubscriberInterface $subscriber The subscriber
      */
-    public function removeSubscriber(EventSubscriberInterface $subscriber);
+    public function removeSubscriber(Event_SubscriberInterface $subscriber);
 
     /**
      * Gets the listeners of a specific event or all listeners.

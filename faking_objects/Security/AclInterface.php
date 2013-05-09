@@ -1,76 +1,24 @@
 <?php
 
-/*
- * This file is part of the Symfony package.
- *
- * (c) Fabien Potencier <fabien@symfony.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-/**
- * This interface represents an access control list (ACL) for a domain object.
- * Each domain object can have exactly one associated ACL.
- *
- * An ACL contains all access control entries (ACE) for a given domain object.
- * In order to avoid needing references to the domain object itself, implementations
- * use ObjectIdentity implementations as an additional level of indirection.
- *
- * @author Johannes M. Schmitt <schmittjoh@gmail.com>
- */
-interface Security_AclInterface extends \Serializable
+interface Security_AclInterface
 {
+	
     /**
-     * Returns all class-based ACEs associated with this ACL
+     * Allow a role a privilege on an object.
      *
      * @return array
      */
-    public function getClassAces();
-
+    public function allow($objectType, $role, $privilege);
+    
     /**
-     * Returns all class-field-based ACEs associated with this ACL
-     *
-     * @param string $field
-     * @return array
+     * Allow a role a privilege on a specific field of an object.
+     * 
+     * @param unknown $objectType
+     * @param unknown $field
+     * @param unknown $role
+     * @param unknown $privilege
      */
-    public function getClassFieldAces($field);
-
-    /**
-     * Returns all object-based ACEs associated with this ACL
-     *
-     * @return array
-     */
-    public function getObjectAces();
-
-    /**
-     * Returns all object-field-based ACEs associated with this ACL
-     *
-     * @param string $field
-     * @return array
-     */
-    public function getObjectFieldAces($field);
-
-    /**
-     * Returns the object identity associated with this ACL
-     *
-     * @return ObjectIdentityInterface
-     */
-    public function getObjectIdentity();
-
-    /**
-     * Returns the parent ACL, or null if there is none.
-     *
-     * @return AclInterface|null
-     */
-    public function getParentAcl();
-
-    /**
-     * Whether this ACL is inheriting ACEs from a parent ACL.
-     *
-     * @return Boolean
-     */
-    public function isEntriesInheriting();
+    public function allowField($objectType, $field, $role, $privilege);
 
     /**
      * Determines whether field access is granted
@@ -81,7 +29,7 @@ interface Security_AclInterface extends \Serializable
      * @param Boolean $administrativeMode
      * @return Boolean
      */
-    public function isFieldGranted($field, array $masks, array $securityIdentities, $administrativeMode = false);
+    public function isFieldGranted($objectType, $field, $privilege, Security_AuthInterface $userAuth, $administrativeMode = false);
 
     /**
      * Determines whether access is granted
@@ -92,13 +40,6 @@ interface Security_AclInterface extends \Serializable
      * @param Boolean $administrativeMode
      * @return Boolean
      */
-    public function isGranted(array $masks, array $securityIdentities, $administrativeMode = false);
+    public function isGranted($objectType, $privilege, Security_AuthInterface $userAuth, $administrativeMode = false);
 
-    /**
-     * Whether the ACL has loaded ACEs for all of the passed security identities
-     *
-     * @param mixed $securityIdentities an implementation of SecurityIdentityInterface, or an array thereof
-     * @return Boolean
-     */
-    public function isSidLoaded($securityIdentities);
 }
